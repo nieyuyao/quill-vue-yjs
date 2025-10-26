@@ -1,0 +1,5 @@
+packages:
+  - packages/*
+
+patchedDependencies:
+  '@y/websocket-server': patches/@y__websocket-server.patch

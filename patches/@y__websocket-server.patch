@@ -1,0 +1,112 @@
+diff --git a/dist/utils.cjs b/dist/utils.cjs
+index efcc18a438812eefa3ffba83fa6f183782d6d992..0a00c0750c26799a6e8621bf6c44af9cc18dcbd3 100644
+--- a/dist/utils.cjs
++++ b/dist/utils.cjs
+@@ -7,7 +7,7 @@ var encoding = require('lib0/encoding');
+ var decoding = require('lib0/decoding');
+ var map = require('lib0/map');
+ var eventloop = require('lib0/eventloop');
+-var yLeveldb = require('y-leveldb');
++// var yLeveldb = require('y-leveldb');
+ var callback = require('./callback.cjs');
+ require('http');
+ require('lib0/number');
+@@ -52,24 +52,24 @@ const persistenceDir = process.env.YPERSISTENCE;
+  * @type {{bindState: function(string,WSSharedDoc):void, writeState:function(string,WSSharedDoc):Promise<any>, provider: any}|null}
+  */
+ let persistence = null;
+-if (typeof persistenceDir === 'string') {
+-  console.info('Persisting documents to "' + persistenceDir + '"');
+-  // @ts-ignore
+-  const ldb = new yLeveldb.LeveldbPersistence(persistenceDir);
+-  persistence = {
+-    provider: ldb,
+-    bindState: async (docName, ydoc) => {
+-      const persistedYdoc = await ldb.getYDoc(docName);
+-      const newUpdates = Y__namespace.encodeStateAsUpdate(ydoc);
+-      ldb.storeUpdate(docName, newUpdates);
+-      Y__namespace.applyUpdate(ydoc, Y__namespace.encodeStateAsUpdate(persistedYdoc));
+-      ydoc.on('update', update => {
+-        ldb.storeUpdate(docName, update);
+-      });
+-    },
+-    writeState: async (_docName, _ydoc) => {}
+-  };
+-}
++// if (typeof persistenceDir === 'string') {
++//   console.info('Persisting documents to "' + persistenceDir + '"');
++//   // @ts-ignore
++//   const ldb = new yLeveldb.LeveldbPersistence(persistenceDir);
++//   persistence = {
++//     provider: ldb,
++//     bindState: async (docName, ydoc) => {
++//       const persistedYdoc = await ldb.getYDoc(docName);
++//       const newUpdates = Y__namespace.encodeStateAsUpdate(ydoc);
++//       ldb.storeUpdate(docName, newUpdates);
++//       Y__namespace.applyUpdate(ydoc, Y__namespace.encodeStateAsUpdate(persistedYdoc));
++//       ydoc.on('update', update => {
++//         ldb.storeUpdate(docName, update);
++//       });
++//     },
++//     writeState: async (_docName, _ydoc) => {}
++//   };
++// }
+ 
+ /**
+  * @param {{bindState: function(string,WSSharedDoc):void,
+diff --git a/src/utils.js b/src/utils.js
+index d624c5a084e67bf268e2a4aae9a3e5341a46e745..63bb00e079a92e08d1a2c1cc55244da7f2cb1b88 100644
+--- a/src/utils.js
++++ b/src/utils.js
+@@ -7,7 +7,7 @@ import * as decoding from 'lib0/decoding'
+ import * as map from 'lib0/map'
+ 
+ import * as eventloop from 'lib0/eventloop'
+-import { LeveldbPersistence } from 'y-leveldb'
++// import { LeveldbPersistence } from 'y-leveldb'
+ 
+ import { callbackHandler, isCallbackSet } from './callback.js'
+ 
+@@ -28,24 +28,24 @@ const persistenceDir = process.env.YPERSISTENCE
+  * @type {{bindState: function(string,WSSharedDoc):void, writeState:function(string,WSSharedDoc):Promise<any>, provider: any}|null}
+  */
+ let persistence = null
+-if (typeof persistenceDir === 'string') {
+-  console.info('Persisting documents to "' + persistenceDir + '"')
+-  // @ts-ignore
+-  const ldb = new LeveldbPersistence(persistenceDir)
+-  persistence = {
+-    provider: ldb,
+-    bindState: async (docName, ydoc) => {
+-      const persistedYdoc = await ldb.getYDoc(docName)
+-      const newUpdates = Y.encodeStateAsUpdate(ydoc)
+-      ldb.storeUpdate(docName, newUpdates)
+-      Y.applyUpdate(ydoc, Y.encodeStateAsUpdate(persistedYdoc))
+-      ydoc.on('update', update => {
+-        ldb.storeUpdate(docName, update)
+-      })
+-    },
+-    writeState: async (_docName, _ydoc) => {}
+-  }
+-}
++// if (typeof persistenceDir === 'string') {
++//   console.info('Persisting documents to "' + persistenceDir + '"')
++//   // @ts-ignore
++//   const ldb = new LeveldbPersistence(persistenceDir)
++//   persistence = {
++//     provider: ldb,
++//     bindState: async (docName, ydoc) => {
++//       const persistedYdoc = await ldb.getYDoc(docName)
++//       const newUpdates = Y.encodeStateAsUpdate(ydoc)
++//       ldb.storeUpdate(docName, newUpdates)
++//       Y.applyUpdate(ydoc, Y.encodeStateAsUpdate(persistedYdoc))
++//       ydoc.on('update', update => {
++//         ldb.storeUpdate(docName, update)
++//       })
++//     },
++//     writeState: async (_docName, _ydoc) => {}
++//   }
++// }
+ 
+ /**
+  * @param {{bindState: function(string,WSSharedDoc):void,

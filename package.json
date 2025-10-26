@@ -1,0 +1,16 @@
+{
+  "name": "wang-editor-vue-yjs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "dev:web": "pnpm --filter web run dev",
+    "dev:server": "pnpm --filter server run dev"
+  },
+  "dependencies": {
+    "quill-cursors": "^4.0.4",
+    "web": "^0.0.2",
+    "y-quill": "^1.0.0"
+  }
+}
