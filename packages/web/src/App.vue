@@ -1,12 +1,18 @@
 <script lang="ts" setup>
 import { useEditor } from './useEditor'
+import History from './components/History.vue';
+import SaveVersion from './components/SaveVersion.vue'
 
 const { editorEl } = useEditor()
 </script>
 
 <template>
-  <div class="editor-wrap">
-    <div ref="editorEl" id="editor" />
+  <div>
+    <History />
+    <SaveVersion />
+    <div class="editor-wrap">
+      <div ref="editorEl" id="editor" />
+    </div>
   </div>
 </template>
 

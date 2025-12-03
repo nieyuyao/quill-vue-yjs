@@ -6,18 +6,23 @@ import * as Y from 'yjs'
 import { QuillBinding } from 'y-quill'
 import { WebsocketProvider } from 'y-websocket'
 import QuillCursors from 'quill-cursors'
+import { randomCursorData } from './utils';
 
 const yDoc = new Y.Doc()
 
-const wsProvider = new WebsocketProvider('wss://localhost:9000', 'my-roomname', yDoc)
+const wsProvider = new WebsocketProvider(import.meta.env.VITE_WS_URL, '1', yDoc)
 
 Quill.register('modules/cursors', QuillCursors)
 
+wsProvider.awareness.setLocalState({
+  user: randomCursorData()
+})
 
 export const useEditor = () => {
   const editorEl = ref<HTMLElement>()
   const editor = shallowRef<Quill>()
 
+  const bindEditorTextChanged = () => {}
 
   onMounted(() => {
     if (!editorEl.value) {
@@ -42,6 +47,8 @@ export const useEditor = () => {
     })
 
     new QuillBinding(yText, editor.value, wsProvider.awareness)
+
+    editor.value.on('text-change', bindEditorTextChanged)
   })
 
   return {

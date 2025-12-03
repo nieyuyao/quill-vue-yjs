@@ -4,5 +4,6 @@
     "outDir": "./dist",
     "moduleResolution": "nodenext",
     "module": "nodenext",
+    "noImplicitAny": false
   }
 }

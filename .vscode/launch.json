@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "Launch server via PNPM",
+      "request": "launch",
+      "runtimeArgs": ["run-script", "dev:server"],
+      "runtimeExecutable": "pnpm",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "node"
+    }
+  ]
+}
