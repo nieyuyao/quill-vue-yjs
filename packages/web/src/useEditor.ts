@@ -3,19 +3,32 @@ import Quill from 'quill'
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import * as Y from 'yjs'
+import { QuillBinding } from 'y-quill'
 import { WebsocketProvider } from 'y-websocket'
+import QuillCursors from 'quill-cursors'
+
+const yDoc = new Y.Doc()
+
+const wsProvider = new WebsocketProvider('wss://localhost:9000', 'my-roomname', yDoc)
+
+Quill.register('modules/cursors', QuillCursors)
 
 
 export const useEditor = () => {
   const editorEl = ref<HTMLElement>()
-  const quill = shallowRef<Quill>()
+  const editor = shallowRef<Quill>()
+
 
   onMounted(() => {
     if (!editorEl.value) {
       return
     }
-    quill.value = new Quill(editorEl.value, {
+
+    const yText = yDoc.getText('quill')
+
+    editor.value = new Quill(editorEl.value, {
       modules: {
+        cursors: true,
         toolbar: {
           controls: [
             [{ header: [1, 2, false] }],
@@ -27,6 +40,8 @@ export const useEditor = () => {
       placeholder: '请输入',
       theme: 'snow', // or 'bubble'
     })
+
+    new QuillBinding(yText, editor.value, wsProvider.awareness)
   })
 
   return {

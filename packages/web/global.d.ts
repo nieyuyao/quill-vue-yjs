@@ -1,47 +1,7 @@
-import { Descendant } from 'slate'
+/// <reference types="yjs" />
 
-export type CursorData = {
-  name: string
-  color: string
-}
-
-export type CustomText = {
-  bold?: boolean
-  italic?: boolean
-  underline?: boolean
-  strikethrough?: boolean
-  text: string
-}
-
-export type Paragraph = {
-  type: 'paragraph'
-  children: Descendant[]
-}
-
-export type InlineCode = {
-  type: 'inline-code'
-  children: Descendant[]
-}
-
-export type HeadingOne = {
-  type: 'heading-one'
-  children: Descendant[]
-}
-
-export type HeadingTwo = {
-  type: 'heading-two'
-  children: Descendant[]
-}
-
-export type BlockQuote = {
-  type: 'block-quote'
-  children: Descendant[]
-}
-
-export type CustomElement = Paragraph | InlineCode | HeadingOne | HeadingTwo | BlockQuote
-
-declare module 'slate' {
-  interface CustomTypes {
-    Element: CustomElement
+declare module '@y/protocols/awareness.js' {
+  export class Awareness {
+    constructor(doc: import('yjs').Doc)
   }
 }

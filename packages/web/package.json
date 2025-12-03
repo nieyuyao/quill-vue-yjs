@@ -14,10 +14,13 @@
   "dependencies": {
     "@faker-js/faker": "^10.1.0",
     "@types/randomcolor": "^0.5.9",
+    "protocols": "link:@types/@y/protocols",
     "quill": "^2.0.3",
+    "quill-cursors": "^4.0.4",
     "randomcolor": "^0.6.2",
     "slate": "^0.82.0",
     "vue": "^3.5.22",
+    "y-quill": "^1.0.0",
     "y-websocket": "^3.0.0",
     "yjs": "^13.6.27"
   },
