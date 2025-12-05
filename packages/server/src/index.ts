@@ -5,15 +5,11 @@ import fs from 'node:fs'
 import https from 'node:https'
 import { WebSocketServer, type WebSocket } from 'ws'
 import * as Y from 'yjs'
-import { MongodbPersistence } from 'y-mongodb'
 import * as utils from '@y/websocket-server/utils'
 import type { WSSharedDoc } from '@y/websocket-server/utils'
 import { createApp } from './app'
-
-const location = process.env.MONGODB_URI
-const collection = 'yjs-transactions'
-
-const db = new MongodbPersistence(location!, collection)
+import { db} from './db'
+import { sharedDocMap } from './shared'
 
 const port = process.env.PORT || 9000
 
@@ -60,12 +56,13 @@ server.on('upgrade', (request, socket, head) => {
 })
 
 utils.setPersistence({
-  bindState: async (docName: string, ydoc: WSSharedDoc) => {
-    const persistedYdoc = await db.getYDoc(docName)
-    const newUpdates = Y.encodeStateAsUpdate(ydoc)
+  bindState: async (docName: string, yDoc: WSSharedDoc) => {
+    const persistedYDoc = await db.getYDoc(docName)
+    const newUpdates = Y.encodeStateAsUpdate(yDoc)
     db.storeUpdate(docName, newUpdates)
-    Y.applyUpdate(ydoc, Y.encodeStateAsUpdate(persistedYdoc))
-    ydoc.on('update', async (update) => {
+    Y.applyUpdate(yDoc, Y.encodeStateAsUpdate(persistedYDoc))
+    sharedDocMap.set(docName, yDoc)
+    yDoc.on('update', async (update) => {
       db.storeUpdate(docName, update)
     })
   },
