@@ -9,7 +9,7 @@ import * as utils from '@y/websocket-server/utils'
 import type { WSSharedDoc } from '@y/websocket-server/utils'
 import { createApp } from './app'
 import { db} from './db'
-import { sharedDocMap } from './shared'
+import { createDocName, getDocName, docConns } from './shared'
 
 const port = process.env.PORT || 9000
 
@@ -24,14 +24,19 @@ const server = https.createServer(options, app.callback())
 
 const wss = new WebSocketServer({ noServer: true, perMessageDeflate: false })
 
-wss.on('connection', (conn: WebSocket, request: IncomingMessage) => {
+wss.on('connection', async (conn: WebSocket, request: IncomingMessage) => {
   const reqUrl = request.url || '/'
   const url = new URL(
     reqUrl.startsWith('https://') || reqUrl.startsWith('http://')
       ? reqUrl
       : `https://localhost${reqUrl}`
   )
-  const docName = url.pathname.slice('/syncDoc/'.length)
+  const docId = url.pathname.slice('/syncDoc/'.length)
+  let docName = await getDocName(docId)
+  if (!docName) {
+    docName = await createDocName(docId)
+  }
+  docConns.set(docId, conn)
   utils.setupWSConnection(conn, request, { docName, gc: true })
 })
 
@@ -44,7 +49,7 @@ server.on('upgrade', (request, socket, head) => {
   )
 
   if (!url.pathname.startsWith('/syncDoc')) {
-    socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');
+    socket.write('HTTP/1.1 403 Forbidden');
     socket.destroy()
     return
   }
@@ -61,7 +66,6 @@ utils.setPersistence({
     const newUpdates = Y.encodeStateAsUpdate(yDoc)
     db.storeUpdate(docName, newUpdates)
     Y.applyUpdate(yDoc, Y.encodeStateAsUpdate(persistedYDoc))
-    sharedDocMap.set(docName, yDoc)
     yDoc.on('update', async (update) => {
       db.storeUpdate(docName, update)
     })

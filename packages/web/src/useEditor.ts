@@ -6,7 +6,7 @@ import * as Y from 'yjs'
 import { QuillBinding } from 'y-quill'
 import { WebsocketProvider } from 'y-websocket'
 import QuillCursors from 'quill-cursors'
-import { randomCursorData } from './utils';
+import { user } from './user'
 
 const yDoc = new Y.Doc()
 
@@ -15,11 +15,22 @@ const wsProvider = new WebsocketProvider(import.meta.env.VITE_WS_URL, '1', yDoc)
 Quill.register('modules/cursors', QuillCursors)
 
 wsProvider.awareness.setLocalState({
-  user: randomCursorData()
+  user,
+})
+
+wsProvider.ws?.addEventListener('message', (event) => {
+  try {
+    const data = JSON.parse(event.data)
+    if (data.type === 'reload') {
+      window.location.reload()
+    }
+  } catch (e) {
+    console.log(e)
+  }
 })
 
 export const useEditor = () => {
-  const editorEl = ref<HTMLElement>()
+  const editorEl = ref<HTMLDivElement | null>(null)
   const editor = shallowRef<Quill>()
 
   const bindEditorTextChanged = () => {}

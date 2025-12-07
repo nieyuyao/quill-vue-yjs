@@ -14,7 +14,7 @@ const historyCollection = 'yjs-history'
 // docLatestVersionCollection
 const docLatestVersionCollection = 'yjs-doc-version'
 
-const docIdCollection = 'yjs-doc-ids'
+const docIdNameCollection = 'yjs-doc-id-name'
 
 const db = new MongodbPersistence(location!, transactionCollection)
 
@@ -24,6 +24,6 @@ const snapshotDb = new MongodbPersistence(location!, snapshotCollection)
 
 const docLatestVersionDb = new MongodbPersistence(location!, docLatestVersionCollection)
 
-const docIdDb= new MongodbPersistence(location!, docIdCollection)
+const docIdNameDb = new MongodbPersistence(location!, docIdNameCollection)
 
-export { db, snapshotDb, historyDb, docLatestVersionDb, docIdDb  }
+export { db, snapshotDb, historyDb, docLatestVersionDb, docIdNameDb  }
