@@ -1,10 +1,18 @@
 <script lang="ts" setup>
+import { ElMessage } from 'element-plus'
 import api from '../api'
 import { user } from '../user'
 
 const publishVersion = async () => {
-  const data = await api.post('/saveVersion', { docId: '1', user: { name: user.name } })
-  console.log(data)
+  try {
+    await api.post('/saveVersion', { docId: '1', user: { name: user.name } })
+    ElMessage({
+      message: '保存成功',
+      type: 'success'
+    })
+  } catch (e) {
+    console.error(e)
+  }
 }
 </script>
 
@@ -14,9 +22,6 @@ const publishVersion = async () => {
 
 <style lang="scss" scoped>
 .publish {
-  position: absolute;
-  top: 10px;
-  right: 96px;
   font-size: 14px;
   cursor: pointer;
 }

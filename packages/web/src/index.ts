@@ -1,6 +1,11 @@
 import { createApp } from 'vue'
 import AppVue from './App.vue'
 import './reset.scss'
+import 'element-plus/dist/index.css'
+import { ElLoading } from 'element-plus'
 
-createApp(AppVue)
- .mount('#app')
+const app = createApp(AppVue)
+app.directive('loading', ElLoading.directive)
+app.mount('#app')
+
+

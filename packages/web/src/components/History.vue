@@ -1,62 +1,73 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { ElDrawer, ElEmpty } from 'element-plus'
 import api from '../api'
 
-const historiesVisible = ref(false)
+const versionRecords = ref<
+  Array<{
+    docId: string
+    version: number
+    value: string
+    user: { name: string }
+    createTime: number
+  }>
+>([])
 
-const versionRecords = ref<Array<{
-  docId: string
-  version: number
-  value: string
-  user: { name: string }
-  createTime: number
-}>>([])
+const drawerVisible = ref(false)
+const loading = ref(false)
 
 const fetchHistories = async () => {
-  const res = await api.get('/getVersionList', {
-    params: { docId: '1' }
-   })
-  historiesVisible.value = true
-  versionRecords.value = res.data.versions
+  drawerVisible.value = true
+  try {
+    loading.value = true
+    const res = await api.get('/getVersionList', {
+      params: { docId: '1' },
+    })
+    versionRecords.value = res.data.versions
+  } finally {
+    loading.value = false
+  }
 }
 
 const recoveryVersion = async (version: number) => {
-  await api.post('/recoveryVersion', {
-    docId: '1',
-    version
-   })
+  try {
+     await api.post('/recoveryVersion', {
+      docId: '1',
+      version,
+    })
+  } catch (e) {
+    console.error(e)
+  }
 }
-
 </script>
 
 <template>
   <div>
     <div class="history-records" @click="fetchHistories">历史记录</div>
-    <teleport to="body">
-      <div v-if="historiesVisible" class="histories">
-        <div style="display: flex; justify-content: space-between;">
-          <div>版本记录</div>
-          <div @click="historiesVisible = false" style="cursor: pointer;">关闭</div>
-        </div>
-        <div class="versions">
-          <div v-for="(record, i) in versionRecords" :key="i" class="version" @click="recoveryVersion(record.version)">
-              <div>版本{{ record.version }}</div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>{{ record.user.name }} </span>
-                创建时间：<span>{{ record.createTime }}</span>
-              </div>
+    <ElDrawer v-model="drawerVisible" title="版本记录" :size="280">
+      <div v-loading="loading">
+        <div v-if="versionRecords.length" class="versions">
+          <div
+            v-for="(record, i) in versionRecords"
+            :key="i"
+            class="version"
+            @click="recoveryVersion(record.version)"
+          >
+            <div>版本{{ record.version }}</div>
+            <div style="display: flex; justify-content: space-between">
+              <span>{{ record.user.name }} </span>
+              创建时间：<span>{{ record.createTime }}</span>
+            </div>
           </div>
         </div>
+        <ElEmpty v-else />
       </div>
-    </teleport>
+    </ElDrawer>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .history-records {
-  position: absolute;
-  top: 10px;
-  right: 24px;
   font-size: 14px;
   cursor: pointer;
   overflow-y: scroll;
@@ -81,5 +92,4 @@ const recoveryVersion = async (version: number) => {
   height: 40px;
   cursor: pointer;
 }
-
 </style>

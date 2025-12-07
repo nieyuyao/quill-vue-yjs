@@ -1,15 +1,13 @@
 <script lang="ts" setup>
 import { useEditor } from './useEditor'
-import History from './components/History.vue';
-import SaveVersion from './components/SaveVersion.vue'
+import Title from './components/Title.vue'
 
 const { editorEl } = useEditor()
 </script>
 
 <template>
   <div>
-    <History />
-    <SaveVersion />
+    <Title />
     <div class="editor-wrap">
       <div ref="editorEl" id="editor" />
     </div>
@@ -20,7 +18,7 @@ const { editorEl } = useEditor()
 .editor-wrap {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 40px);
 
   #editor {
     flex: 1;
