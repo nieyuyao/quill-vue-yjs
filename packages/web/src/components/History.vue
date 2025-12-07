@@ -1,17 +1,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { ElDrawer, ElEmpty } from 'element-plus'
+import { DocVersion } from '@quill-vue-yjs/common'
+import { ElDrawer, ElEmpty, ElMessage } from 'element-plus'
 import api from '../api'
 
-const versionRecords = ref<
-  Array<{
-    docId: string
-    version: number
-    value: string
-    user: { name: string }
-    createTime: number
-  }>
->([])
+const versionRecords = ref <Array<DocVersion>>([])
 
 const drawerVisible = ref(false)
 const loading = ref(false)
@@ -23,7 +16,7 @@ const fetchHistories = async () => {
     const res = await api.get('/getVersionList', {
       params: { docId: '1' },
     })
-    versionRecords.value = res.data.versions
+    versionRecords.value = res.data.data.versions
   } finally {
     loading.value = false
   }
@@ -31,10 +24,16 @@ const fetchHistories = async () => {
 
 const recoveryVersion = async (version: number) => {
   try {
-     await api.post('/recoveryVersion', {
+    const res = await api.post('/recoveryVersion', {
       docId: '1',
       version,
     })
+    if (res.data.errno === 0) {
+      ElMessage({
+        message: '恢复成功',
+        type: 'success',
+      })
+    }
   } catch (e) {
     console.error(e)
   }
@@ -72,18 +71,6 @@ const recoveryVersion = async (version: number) => {
   cursor: pointer;
   overflow-y: scroll;
 }
-.histories {
-  position: fixed;
-  top: 0;
-  right: 0;
-  padding: 8px 12px;
-  width: 240px;
-  height: 100vh;
-  z-index: 100;
-  box-shadow: 0 10px 16px 10px rgb(0 0 0 / 8%);
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
-  background-color: #fff;
-}
 .version {
   display: flex;
   flex-direction: column;
@@ -91,5 +78,9 @@ const recoveryVersion = async (version: number) => {
   font-size: 12px;
   height: 40px;
   cursor: pointer;
+}
+
+:deep(.el-drawer__header) {
+  margin-bottom: 0;
 }
 </style>

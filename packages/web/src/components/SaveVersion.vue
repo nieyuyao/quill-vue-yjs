@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import api from '../api'
-import { user } from '../user'
+import { cursorData } from '../cursor'
 
 const publishVersion = async () => {
   try {
-    await api.post('/saveVersion', { docId: '1', user: { name: user.name } })
+    await api.post('/saveVersion', { docId: '1', user: cursorData.user })
     ElMessage({
       message: '保存成功',
       type: 'success'

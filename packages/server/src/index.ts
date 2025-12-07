@@ -9,7 +9,7 @@ import * as utils from '@y/websocket-server/utils'
 import type { WSSharedDoc } from '@y/websocket-server/utils'
 import { createApp } from './app'
 import { db} from './db'
-import { createDocName, getDocName, docConns } from './shared'
+import { createDocName, getDocName, persistConn } from './shared'
 
 const port = process.env.PORT || 9000
 
@@ -36,7 +36,7 @@ wss.on('connection', async (conn: WebSocket, request: IncomingMessage) => {
   if (!docName) {
     docName = await createDocName(docId)
   }
-  docConns.set(docId, conn)
+  persistConn(docId, conn)
   utils.setupWSConnection(conn, request, { docName, gc: true })
 })
 
@@ -63,8 +63,6 @@ server.on('upgrade', (request, socket, head) => {
 utils.setPersistence({
   bindState: async (docName: string, yDoc: WSSharedDoc) => {
     const persistedYDoc = await db.getYDoc(docName)
-    const newUpdates = Y.encodeStateAsUpdate(yDoc)
-    db.storeUpdate(docName, newUpdates)
     Y.applyUpdate(yDoc, Y.encodeStateAsUpdate(persistedYDoc))
     yDoc.on('update', async (update) => {
       db.storeUpdate(docName, update)

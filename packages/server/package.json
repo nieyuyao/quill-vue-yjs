@@ -18,13 +18,16 @@
     "@types/ws": "^8.18.1",
     "@y/websocket-server": "^0.1.1",
     "koa": "^3.1.1",
+    "lib0": "^0.2.114",
     "lodash-es": "^4.17.21",
     "nanoid": "^5.1.6",
     "ts-node": "^10.9.2",
     "uuid": "^13.0.0",
+    "web": "^0.0.2",
     "ws": "^8.18.3",
     "y-mongodb": "^0.1.11",
-    "yjs": "^13.6.27"
+    "yjs": "^13.6.27",
+    "@quill-vue-yjs/common": "workspace:*"
   },
   "devDependencies": {
     "@types/koa": "^3.0.1",

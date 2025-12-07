@@ -1,4 +1,7 @@
+import { User } from "@quill-vue-yjs/common"
+
 export type CursorData = {
-  name: string
+  user: User
   color: string
 }
+

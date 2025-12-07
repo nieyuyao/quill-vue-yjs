@@ -1,27 +1,33 @@
-import { onMounted, ref, shallowRef } from 'vue'
+import { onMounted, ShallowRef, shallowRef } from 'vue'
 import Quill from 'quill'
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
 import * as Y from 'yjs'
 import { QuillBinding } from 'y-quill'
+import { IndexeddbPersistence } from 'y-indexeddb'
+import { createDecoder, readVarUint } from 'lib0/decoding'
 import { WebsocketProvider } from 'y-websocket'
 import QuillCursors from 'quill-cursors'
-import { user } from './user'
+import { cursorData } from './cursor'
 
 const yDoc = new Y.Doc()
 
-const wsProvider = new WebsocketProvider(import.meta.env.VITE_WS_URL, '1', yDoc)
+const docName = '1'
+
+const wsProvider = new WebsocketProvider(import.meta.env.VITE_WS_URL, docName, yDoc)
 
 Quill.register('modules/cursors', QuillCursors)
 
-wsProvider.awareness.setLocalState({
-  user,
-})
+wsProvider.awareness.setLocalState(
+  {
+    color: cursorData.color,
+    name: cursorData.user.name
+  },
+)
 
 wsProvider.ws?.addEventListener('message', (event) => {
   try {
-    const data = JSON.parse(event.data)
-    if (data.type === 'reload') {
+    const decoder = createDecoder(new Uint8Array(event.data))
+    const messageType = readVarUint(decoder);
+    if (messageType === 21) {
       window.location.reload()
     }
   } catch (e) {
@@ -29,20 +35,19 @@ wsProvider.ws?.addEventListener('message', (event) => {
   }
 })
 
-export const useEditor = () => {
-  const editorEl = ref<HTMLDivElement | null>(null)
+export const useEditor = (editorRef: ShallowRef<HTMLDivElement | null>) => {
   const editor = shallowRef<Quill>()
 
   const bindEditorTextChanged = () => {}
 
   onMounted(() => {
-    if (!editorEl.value) {
+    if (!editorRef.value) {
       return
     }
 
     const yText = yDoc.getText('quill')
 
-    editor.value = new Quill(editorEl.value, {
+    editor.value = new Quill(editorRef.value, {
       modules: {
         cursors: true,
         toolbar: {
@@ -54,15 +59,17 @@ export const useEditor = () => {
         },
       },
       placeholder: '请输入',
-      theme: 'snow', // or 'bubble'
+      theme: 'snow',
     })
 
     new QuillBinding(yText, editor.value, wsProvider.awareness)
 
+    const provider = new IndexeddbPersistence(docName, yDoc)
+
+    provider.on('synced', () => {
+      console.log('content from the database is loaded')
+    })
+
     editor.value.on('text-change', bindEditorTextChanged)
   })
-
-  return {
-    editorEl,
-  }
 }

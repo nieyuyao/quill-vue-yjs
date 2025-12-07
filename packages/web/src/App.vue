@@ -1,15 +1,18 @@
 <script lang="ts" setup>
+import { useTemplateRef } from 'vue'
 import { useEditor } from './useEditor'
 import Title from './components/Title.vue'
 
-const { editorEl } = useEditor()
+const editorElRef = useTemplateRef('editor')
+
+useEditor(editorElRef)
 </script>
 
 <template>
   <div>
     <Title />
     <div class="editor-wrap">
-      <div ref="editorEl" id="editor" />
+      <div ref="editor" id="editor" />
     </div>
   </div>
 </template>

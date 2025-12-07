@@ -13,6 +13,8 @@ importers:
 
   .: {}
 
+  packages/common: {}
+
   packages/server:
     dependencies:
       '@koa/bodyparser':
@@ -24,6 +26,9 @@ importers:
       '@koa/router':
         specifier: ^15.0.0
         version: 15.0.0
+      '@quill-vue-yjs/common':
+        specifier: workspace:*
+        version: link:../common
       '@types/websocket':
         specifier: ^1.0.10
         version: 1.0.10
@@ -36,6 +41,9 @@ importers:
       koa:
         specifier: ^3.1.1
         version: 3.1.1
+      lib0:
+        specifier: ^0.2.114
+        version: 0.2.114
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -48,6 +56,9 @@ importers:
       uuid:
         specifier: ^13.0.0
         version: 13.0.0
+      web:
+        specifier: ^0.0.2
+        version: 0.0.2
       ws:
         specifier: ^8.18.3
         version: 8.18.3
@@ -71,13 +82,14 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/shared: {}
-
   packages/web:
     dependencies:
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.1.0
+      '@quill-vue-yjs/common':
+        specifier: workspace:*
+        version: link:../common
       '@types/randomcolor':
         specifier: ^0.5.9
         version: 0.5.9
@@ -87,6 +99,9 @@ importers:
       element-plus:
         specifier: ^2.12.0
         version: 2.12.0(vue@3.5.22(typescript@5.9.3))
+      lib0:
+        specifier: ^0.2.114
+        version: 0.2.114
       protocols:
         specifier: link:@types/@y/protocols
         version: link:@types/@y/protocols
@@ -105,6 +120,9 @@ importers:
       vue:
         specifier: ^3.5.22
         version: 3.5.22(typescript@5.9.3)
+      y-indexeddb:
+        specifier: ^9.0.12
+        version: 9.0.12(yjs@13.6.27)
       y-quill:
         specifier: ^1.0.0
         version: 1.0.0(quill-cursors@4.0.4)(quill@2.0.3)(yjs@13.6.27)
@@ -2059,6 +2077,9 @@ packages:
       typescript:
         optional: true
 
+  web@0.0.2:
+    resolution: {integrity: sha512-DDf86rBor7Hn4uRgXbCxcOKyP8aiokvkd648k/xjKUO4hQSLvupfDC3dHCBXQ4lJFxYW62/CEWpSINbSQRr57A==}
+
   which-module@2.0.1:
     resolution: {integrity: sha512-iBdZ57RDvnOR9AGBhML2vFZf7h8vmBjhoaZqODJBFWHVtKkDmKuHai3cx5PgVMrX5YDNp27AofYbAwctSS+vhQ==}
 
@@ -2102,6 +2123,12 @@ packages:
   xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
+
+  y-indexeddb@9.0.12:
+    resolution: {integrity: sha512-9oCFRSPPzBK7/w5vOkJBaVCQZKHXB/v6SIT+WYhnJxlEC61juqG0hBrAf+y3gmSMLFLwICNH9nQ53uscuse6Hg==}
+    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
+    peerDependencies:
+      yjs: ^13.0.0
 
   y-leveldb@0.1.2:
     resolution: {integrity: sha512-6ulEn5AXfXJYi89rXPEg2mMHAyyw8+ZfeMMdOtBbV8FJpQ1NOrcgi6DTAcXof0dap84NjHPT2+9d0rb6cFsjEg==}
@@ -4040,6 +4067,8 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
+  web@0.0.2: {}
+
   which-module@2.0.1: {}
 
   which@1.3.1:
@@ -4069,6 +4098,11 @@ snapshots:
 
   xtend@4.0.2:
     optional: true
+
+  y-indexeddb@9.0.12(yjs@13.6.27):
+    dependencies:
+      lib0: 0.2.114
+      yjs: 13.6.27
 
   y-leveldb@0.1.2(yjs@13.6.27):
     dependencies:
