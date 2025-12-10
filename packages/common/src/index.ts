@@ -5,7 +5,7 @@ export interface User {
 export interface DocVersion {
   docId: string
   version: number
-  value: string
+  content: string
   user: User
   createTime: number
 }

@@ -10,9 +10,9 @@ import { cursorData } from './cursor'
 
 const yDoc = new Y.Doc()
 
-const docName = '1'
+const roomName = '1'
 
-const wsProvider = new WebsocketProvider(import.meta.env.VITE_WS_URL, docName, yDoc)
+const wsProvider = new WebsocketProvider(import.meta.env.VITE_WS_URL, roomName, yDoc)
 
 Quill.register('modules/cursors', QuillCursors)
 
@@ -45,7 +45,7 @@ export const useEditor = (editorRef: ShallowRef<HTMLDivElement | null>) => {
       return
     }
 
-    const yText = yDoc.getText('quill')
+    const yText = yDoc.getText('default')
 
     editor.value = new Quill(editorRef.value, {
       modules: {
@@ -64,7 +64,7 @@ export const useEditor = (editorRef: ShallowRef<HTMLDivElement | null>) => {
 
     new QuillBinding(yText, editor.value, wsProvider.awareness)
 
-    const provider = new IndexeddbPersistence(docName, yDoc)
+    const provider = new IndexeddbPersistence(roomName, yDoc)
 
     provider.on('synced', () => {
       console.log('content from the database is loaded')

@@ -1,4 +1,10 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+
+export type Response<T> = AxiosResponse<{
+  errno: number
+  errmsg: string
+  data: T
+}>
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_API_HOST

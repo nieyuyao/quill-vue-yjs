@@ -1,46 +1,11 @@
-import { type WebSocket } from 'ws'
-import { v4 as uuidv4 } from 'uuid'
-import { docIdNameDb } from './db'
+import type { WSSharedDoc } from '@y/websocket-server/utils'
 
-export const docConns = new Map<string, WebSocket[]>()
+export const persistedSharedDocs  = new Map<string, WSSharedDoc>()
 
-export const persistConn = (docId, conn: WebSocket) => {
-  let conns = docConns.get(docId)
-  if (conns) {
-    conns.push(conn)
-  } else {
-    conns = [conn]
-    docConns.set(docId, [conn])
-  }
+export const persistSharedDocs= (docId, doc: WSSharedDoc) => {
+  persistedSharedDocs.set(docId, doc)
 
-  conn.on('close', () => {
-    const index = conns.findIndex(item => item === conn)
-    if (index >= 0) {
-      conns.splice(index, 1)
-    }
+  doc.on('destroy', () => {
+    persistedSharedDocs.delete(docId)
   })
-}
-
-// docName类似于git branch
-export const createDocName = async (docId: string): Promise<string> => {
-  const res = await docIdNameDb._transact(async (db) => {
-    const value = await db.get({ docId })
-    if (value) {
-      await db.del({ docId })
-    }
-    const neweValue = {
-      docId,
-      docName: uuidv4()
-    }
-    await db.put(neweValue)
-    return neweValue
-  }) as { docId: string, docName: string }
-  return res.docName
-}
-
-export const getDocName = async (docId) => {
-  const res = await docIdNameDb._transact(async (db) => {
-    return await db.get({ docId })
-  }) as ({ docId: string, docName: string } | null)
-  return res?.docName ?? ''
 }

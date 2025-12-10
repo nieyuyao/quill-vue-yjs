@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { DocVersion } from '@quill-vue-yjs/common'
 import { ElDrawer, ElEmpty, ElMessage } from 'element-plus'
-import api from '../api'
+import api, { Response } from '../api'
+import { formatTime } from '../utils'
 
 const versionRecords = ref <Array<DocVersion>>([])
 
@@ -13,10 +14,11 @@ const fetchHistories = async () => {
   drawerVisible.value = true
   try {
     loading.value = true
-    const res = await api.get('/getVersionList', {
+    const res = await api.get<any, Response<{ versions: DocVersion[] }>>('/getVersionList', {
       params: { docId: '1' },
     })
-    versionRecords.value = res.data.data.versions
+    loading.value = false
+    versionRecords.value = res.data.data?.versions ?? []
   } finally {
     loading.value = false
   }
@@ -55,7 +57,7 @@ const recoveryVersion = async (version: number) => {
             <div>版本{{ record.version }}</div>
             <div style="display: flex; justify-content: space-between">
               <span>{{ record.user.name }} </span>
-              创建时间：<span>{{ record.createTime }}</span>
+              <span>创建时间：{{ formatTime(record.createTime) }}</span>
             </div>
           </div>
         </div>

@@ -14,9 +14,11 @@
     "@koa/bodyparser": "^6.0.0",
     "@koa/cors": "^5.0.0",
     "@koa/router": "^15.0.0",
+    "@quill-vue-yjs/common": "workspace:*",
     "@types/websocket": "^1.0.10",
     "@types/ws": "^8.18.1",
     "@y/websocket-server": "^0.1.1",
+    "ioredis": "^5.8.2",
     "koa": "^3.1.1",
     "lib0": "^0.2.114",
     "lodash-es": "^4.17.21",
@@ -26,8 +28,7 @@
     "web": "^0.0.2",
     "ws": "^8.18.3",
     "y-mongodb": "^0.1.11",
-    "yjs": "^13.6.27",
-    "@quill-vue-yjs/common": "workspace:*"
+    "yjs": "^13.6.27"
   },
   "devDependencies": {
     "@types/koa": "^3.0.1",

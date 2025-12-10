@@ -3,4 +3,6 @@ export enum ErrorCodes {
   InvalidParams = 10000,
   DatabaseException,
   InvalidVersion,
+  RevertFailed,
+  VersionNotFound,
 }

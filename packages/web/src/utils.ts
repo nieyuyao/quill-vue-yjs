@@ -32,6 +32,9 @@ export function formatTime(inputTime: number): string {
   const minutes = Math.floor(seconds / 60)
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
+  if (seconds <= 0) {
+    return '刚刚'
+  }
   if (seconds < 60) {
     return `${seconds}秒前`
   }
